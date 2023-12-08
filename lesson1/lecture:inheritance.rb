@@ -49,7 +49,10 @@ puts kobu.speak
 puts kobu.jump
 
 =begin
-A method lookup path is the order of classes in which Ruby searches for the method that is currently invoked. It is important because the order of the lookup determines which method is being used. If there are multiple similar method names in different classes, the method from the earliest occuring class will be invoked.
+A method lookup path is the order of classes in which Ruby searches for the method that is 
+currently invoked. It is important because the order of the lookup determines which method ends
+up being used. If there are multiple similar method names in different classes, the method 
+from the earliest occuring class will be invoked.
 =end
 
 p Bulldog.ancestors

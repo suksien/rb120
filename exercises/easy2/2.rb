@@ -12,7 +12,7 @@ module Drivable
 end
 
 class Car
-  include Drivable.drive
+  include Drivables
 end
 
 bobs_car = Car.new

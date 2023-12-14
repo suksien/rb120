@@ -1,7 +1,7 @@
 =begin
 
-Write the classes and methods that will be necessary to make this code run, 
-and print the following output:
+Suppose the shelter has a number of not-yet-adopted pets, and wants to manage them through this 
+same system. Thus, you should be able to add the following output to the example output shown above:
 
 =end
 
@@ -30,13 +30,26 @@ class Owner
 end
 
 class Shelter
+  attr_accessor :owners, :animals
   def initialize
     @owners = []
+    @animals = []
+  end
+
+  def add_new_animal(animal)
+    self.animals << animal
+  end
+
+  def number_of_available_pets
+    animals.size
   end
 
   def adopt(person, animal) # person and animal are "collaborator objects" for Shelter
-    @owners << person unless @owners.include?(person)
-    person.adopt(animal)
+    if animals.include?(animal)
+      self.owners << person unless owners.include?(person)
+      person.adopt(animal)
+      self.animals.delete(animal)
+    end
   end
 
   def print_adoptions
@@ -51,7 +64,6 @@ class Shelter
   end
 end
 
-
 butterscotch = Pet.new('cat', 'Butterscotch')
 pudding      = Pet.new('cat', 'Pudding')
 darwin       = Pet.new('bearded dragon', 'Darwin')
@@ -60,18 +72,27 @@ sweetie      = Pet.new('parakeet', 'Sweetie Pie')
 molly        = Pet.new('dog', 'Molly')
 chester      = Pet.new('fish', 'Chester')
 
+shelter = Shelter.new
+shelter.add_new_animal(butterscotch)
+shelter.add_new_animal(pudding)
+shelter.add_new_animal(darwin)
+shelter.add_new_animal(kennedy)
+shelter.add_new_animal(sweetie)
+
+puts "Shelter currently has #{shelter.number_of_available_pets} available animals."
+puts "\n"
+
 phanson = Owner.new('P Hanson')
 bholmes = Owner.new('B Holmes')
 
-shelter = Shelter.new
 shelter.adopt(phanson, butterscotch)
-shelter.adopt(phanson, pudding)
-shelter.adopt(phanson, darwin)
-shelter.adopt(bholmes, kennedy)
+shelter.adopt(bholmes, pudding)
 shelter.adopt(bholmes, sweetie)
-shelter.adopt(bholmes, molly)
-shelter.adopt(bholmes, chester)
+shelter.adopt(bholmes, kennedy)
 
 shelter.print_adoptions
 puts "#{phanson.name} has #{phanson.number_of_pets} adopted pets."
 puts "#{bholmes.name} has #{bholmes.number_of_pets} adopted pets."
+
+puts "Shelter currently has #{shelter.number_of_available_pets} available animals."
+puts "\n"

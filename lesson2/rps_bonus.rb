@@ -115,12 +115,13 @@ class Computer < Player
 end
 
 class RPSGame
-  attr_accessor :human, :computer
+  attr_accessor :human, :computer, :rounds_result
   GAME_POINT = 3
 
   def initialize
     @human = Human.new
     @computer = Computer.new
+    @rounds_result = []
   end
 
   def display_welcome_message
@@ -135,7 +136,7 @@ class RPSGame
   def display_all_moves
     puts "Here are all the moves #{human.name} and #{computer.name} have made:"
     human.all_moves.each_index do |index|
-      puts "#{human.all_moves[index]} vs. #{computer.all_moves[index]}"
+      puts "#{human.all_moves[index]} vs. #{computer.all_moves[index]} (#{rounds_result[index]})"
     end
     puts "\n"
   end
@@ -161,26 +162,18 @@ class RPSGame
     puts "#{computer.name} chose #{computer.move}"
     
     if human.move > computer.move
-      puts "#{human.name} wins!"
+      result = "#{human.name} wins"
       human.total_score += 1
+  
     elsif human.move < computer.move
-      puts "#{computer.name} wins!"
+      result = "#{computer.name} wins"
       computer.total_score += 1
     else
-      puts "It's a tie!"
+      result = "It's a tie"
     end
+    puts "#{result}!"
     puts "\n"
-  end
-
-  def play_again?
-    ans = nil
-    loop do
-      puts "Do you want to play again? (y/n)"
-      ans = gets.chomp
-      break if ['y', 'n'].include?(ans.downcase)
-      puts "Sorry, must be y or n."
-    end
-    ans == "y"
+    rounds_result << result
   end
 
   def play
@@ -189,7 +182,6 @@ class RPSGame
       human.choose
       computer.choose
       display_winner
-      #break unless play_again?
     end
 
     display_all_moves
@@ -200,5 +192,3 @@ class RPSGame
 end
 
 RPSGame.new.play
-
-# TODO: results of each round in history of moves

@@ -1,8 +1,4 @@
 module Walkable
-  # def walk(name, gait)
-  #   "#{name} #{gait} forward"
-  # end
-  
   def walk
     "#{name} #{gait} forward"
   end

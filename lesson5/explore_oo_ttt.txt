@@ -1,0 +1,36 @@
+=begin
+18 min
+
+1. Write a description of the problem and extract major nouns and verbs.
+TTT is a game where 2 player takes turn placing either X or O on a board, which is a 3x3 grid. Whoever reaches a straight line of consecutive 3 X's or O's wins. If there is no line with a straight X or O, then it is a tie. The game ends when a winner is announced or there are no available slots on the board.
+
+2. Make an initial guess at organizing the verbs into nouns and do a spike to explore the problem with temporary code.
+Nouns: players, board (square, grid)
+Verbs: place_square
+
+Board (mark_square)
+  - 
+Player (place_square)
+  - name, marker
+
+
+=end
+
+class TTTGame
+  def play
+    display_welcome_msg
+    loop do
+      display_board
+      player.mark
+      break if winner?(player, computer)
+      computer.mark
+      break if winner?(player, computer)
+    end
+
+    display_winner
+    display_goodbye_msg    
+  end
+end
+
+game = TTTGame.new
+game.play

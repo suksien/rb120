@@ -1,0 +1,46 @@
+1. Write a description of the problem and extract major nouns and verbs.
+
+21 is a card game between 2 players where each player takes turn drawing a card
+from the deck until one player busts. The goal is to reach as closely as possible to 
+21 without going over. In each round, the player can either hit (draw a card) or 
+stay (not draw a card). 
+
+Nouns: card, player, deck
+Verb: draw, bust, reach, hit, stay
+
+2. Make an initial guess at organizing the verbs into nouns and 
+do a spike to explore the problem with temporary code.
+
+Deck: bust, reach
+Player: draw, hit?, stay?, count card
+
+class Deck
+  def initialize
+    @cards = {}
+  end
+
+end
+
+class Card
+  def initialize
+    @value
+  end
+end
+
+class Player
+  def initialize
+    @cards_at_hand = []
+  end
+
+  def draw
+  end
+  
+  def hit?
+  end
+  
+  def stay?
+  end
+
+  def count_cards
+  end
+end

@@ -57,7 +57,7 @@ class Board
   def three_identical_markers?(squares)
     marked_squares = squares.select(&:marked?)
     return false if marked_squares.size != 3
-    
+
     marked_squares_markers = marked_squares.map(&:marker)
     marked_squares_markers.uniq.size == 1
   end
@@ -95,12 +95,15 @@ end
 class TTTGame
   HUMAN_MARKER = 'X'
   COMPUTER_MARKER = 'O'
+  
   attr_reader :board, :human, :computer
+  attr_accessor :current_player
 
   def initialize
     @board = Board.new
     @human = Player.new(HUMAN_MARKER)
     @computer = Player.new(COMPUTER_MARKER)
+    @current_player = @human
   end
 
   def clear_screen
@@ -172,7 +175,20 @@ class TTTGame
 
   def reset
     board.reset
+    self.current_player = human
     clear_screen
+  end
+
+  def human_turn?
+    current_player == human
+  end
+
+  def switch_player
+    self.current_player = (human_turn? ? computer : human)
+  end
+
+  def current_player_moves
+    human_turn? ? human_moves : computer_moves
   end
 
   def play
@@ -181,16 +197,12 @@ class TTTGame
 
     loop do
       display_board
-
+  
       loop do
-        human_moves
+        current_player_moves
         break if board.someone_won? || board.full?
-        
-        computer_moves
-        break if board.someone_won? || board.full?
-
-        clear_screen_then_display_board
-        
+        switch_player
+        clear_screen_then_display_board if human_turn?
       end
 
       display_result

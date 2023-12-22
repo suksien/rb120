@@ -22,17 +22,19 @@ class Board
   end
 
   def draw
+    puts ""
     puts "     |     |"
     puts "  #{@squares[1]}  |  #{@squares[2]}  |  #{@squares[3]}"
     puts "     |     |"
-    puts "-----+-----+-----"
+    puts "-----+-----+----"
     puts "     |     |"
     puts "  #{@squares[4]}  |  #{@squares[5]}  |  #{@squares[6]}"
-    puts "     |     |"
-    puts "-----+-----+-----"
-    puts "     |     |"
-    puts "  #{@squares[7]}  |  #{@squares[8]}  |  #{@squares[9]}"
-    puts "     |     |"
+    puts "     |     |         1 | 2 | 3 "
+    puts "-----+-----+----    ---+---+---"
+    puts "     |     |         4 | 5 | 6"
+    puts "  #{@squares[7]}  |  #{@squares[8]}  |  #{@squares[9]}     ---+---+---"
+    puts "     |     |         7 | 8 | 9 "
+    puts ""
   end
 
   def full?
@@ -86,8 +88,9 @@ class Square
 end
 
 class Player
-  attr_reader :marker
-  def initialize(marker)
+  attr_reader :name, :marker
+  def initialize(name, marker)
+    @name = name
     @marker = marker
   end
 end
@@ -95,15 +98,45 @@ end
 class TTTGame  
   MARKER1 = 'O'
   MARKER2 = 'X'
+  COMPUTER_NAMES = ['Quasar', '3C 273', 'Andromeda', 'Hubble', 'Kobu']
 
   attr_reader :board, :human, :computer
-  attr_accessor :current_player
+  attr_accessor :current_player, :nrounds, :scoreboard
 
   def initialize
+    puts self
     @board = Board.new
-    @human = Player.new(human_marker)
-    @computer = Player.new(computer_marker)
+    @human = Player.new(human_name, human_marker)
+    @computer = Player.new(computer_name, computer_marker)
+    set_nrounds
     @current_player = @human
+    @scoreboard = { @human.name => 0, @computer.name => 0 }
+  end
+
+  def set_nrounds
+    total_rounds = ''
+    loop do
+      puts "How many rounds would you like to play? (enter a number > 0)"
+      total_rounds = gets.chomp
+      break if total_rounds.to_i.to_s == total_rounds && total_rounds.to_i > 0
+      puts "Sorry, not a valid choice.  "
+    end
+    self.nrounds = total_rounds.to_i
+  end
+
+  def human_name
+    name = nil
+    loop do
+      puts "Please enter your name: "
+      name = gets.chomp
+      break unless name.empty?
+      puts "Sorry, must enter a value."
+    end
+    name
+  end
+
+  def computer_name
+    COMPUTER_NAMES.sample
   end
 
   def human_marker
@@ -119,10 +152,6 @@ class TTTGame
 
   def computer_marker
     human.marker == MARKER1 ? MARKER2 : MARKER1
-  end
-
-  def clear_screen
-    system 'clear'
   end
 
   def human_moves
@@ -141,8 +170,20 @@ class TTTGame
     board[key] = computer.marker
   end
 
+  def clear_screen
+    system 'clear'
+  end
+
+  def to_s
+    "~~~~~~~ Welcome to Tic Tac Toe ~~~~~~~"
+  end
+
   def display_welcome_message
-    puts "Welcome to Tic Tac Toe!"
+    if nrounds > 1
+      puts "Hi #{human.name}, you will be playing against #{computer.name} for a total of #{nrounds} rounds."
+    else
+      puts "Hi #{human.name}, you will be playing against #{computer.name} for a total of #{nrounds} round."
+    end
     puts ""
   end
 
@@ -150,26 +191,58 @@ class TTTGame
     puts "Thanks for playing Tic Tac Toe, have a great day!"
   end
  
-  def display_board()
-    puts "You are #{human.marker}, computer is #{computer.marker}"
+  def display_board(this_round=nil)
+    puts "Round #{this_round}:" if this_round
+    puts "You are #{human.marker}, #{computer.name} is #{computer.marker}"
     puts ""
     board.draw
     puts ""
   end
 
-  def clear_screen_then_display_board
+  def clear_screen_then_display_board(this_round=nil)
     clear_screen
-    display_board
+    display_board(this_round)
   end
 
-  def display_result
-    clear_screen_then_display_board
+  def display_result(this_round=nil)
+    clear_screen_then_display_board(this_round)
 
     case board.winning_marker
-    when human.marker then puts "You won!"
-    when computer.marker then puts "Computer won!"
+    when human.marker then puts "#{human.name} won this round!"
+    when computer.marker then puts "#{computer.name} won this round!"
     else puts "You tie!"
     end
+    puts ""
+  end
+
+  def update_scoreboard # bug here: computer score not updating
+    case board.winning_marker
+    when human.marker then self.scoreboard[human.name] += 1
+    when computer.marker then self.scoreboard[computer.name] += 1
+    end
+  end
+
+  def reset_scoreboard
+    self.scoreboard = { @human.name => 0, @computer.name => 0 }
+  end
+
+  def display_grand_winner
+    puts "~~~~~~~ End of game ~~~~~~~"
+    human_score = scoreboard[human.name]
+    win_or_wins = (human_score > 1 ? "wins" : "win")
+    puts "#{human.name} has #{human_score} #{win_or_wins}"
+
+    computer_score = scoreboard[computer.name]
+    win_or_wins = (computer_score > 1 ? "wins" : "win")
+    puts "#{computer.name} has #{computer_score} #{win_or_wins}"
+
+    if human_score == computer_score
+      puts "====> It's a tie! <===="
+    else
+      grand_winner = (human_score > computer_score ? human : computer)
+      puts "====> #{grand_winner.name} is the grand winner, congrats! <===="
+    end
+    puts "\n"
   end
 
   def display_play_again_message
@@ -182,14 +255,23 @@ class TTTGame
     loop do
       puts "Would you like to play again? (y or n) "
       ans = gets.chomp
-      break if %w(y n).include?(ans)
+      break if %w(y n yes no).include?(ans.downcase)
       puts "Sorry, not a valid choice. "
     end
-    ans == 'y'
+    ans.downcase == 'y' || ans.downcase == 'yes'
+  end
+
+  def reset_round
+    board.reset
+    reset_scoreboard
+    self.current_player = human
+    sleep 1.5
+    clear_screen
   end
 
   def reset
     board.reset
+    set_nrounds
     self.current_player = human
     clear_screen
   end
@@ -207,22 +289,34 @@ class TTTGame
   end
 
   def play
-    clear_screen
-    display_welcome_message
-
     loop do
-      display_board
-  
+      clear_screen
+      display_welcome_message
+      this_round = 1
+
       loop do
-        current_player_moves
-        break if board.someone_won? || board.full?
-        switch_player
-        clear_screen_then_display_board if human_turn?
+        display_board(this_round)
+
+        loop do
+          current_player_moves
+          update_scoreboard if board.someone_won?
+          break if board.someone_won? || board.full?
+          switch_player
+          clear_screen_then_display_board(this_round) if human_turn?
+        end
+
+        display_result
+
+        this_round += 1
+        break if this_round > nrounds
+
+        reset_round
       end
 
-      display_result
+      display_grand_winner
       break unless play_again?
-      reset
+
+      reset # need to test if reseting scoreboard works if play again
       display_play_again_message
     end
 

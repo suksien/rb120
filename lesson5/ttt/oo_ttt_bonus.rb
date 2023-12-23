@@ -55,6 +55,18 @@ class Board
     nil
   end
 
+  def squares_with_one_spot_left(marker)
+    square = []
+    WINNING_LINES.each do |line|
+      line_markers = @squares.values_at(*line).map(&:marker)
+      if line_markers.count(marker) == 2 && line_markers.count(Square::INITIAL_MARKER) == 1
+        square_num = line[line_markers.index(Square::INITIAL_MARKER)]
+        square << square_num
+      end
+    end
+    square
+  end 
+
   private
   def three_identical_markers?(squares)
     marked_squares = squares.select(&:marked?)
@@ -63,7 +75,6 @@ class Board
     marked_squares_markers = marked_squares.map(&:marker)
     marked_squares_markers.uniq.size == 1
   end
-
 end
 
 class Square
@@ -88,13 +99,17 @@ class Square
 end
 
 class Player
-  attr_reader :name, :marker
+  attr_accessor :name, :marker
   def initialize(name, marker)
     @name = name
     @marker = marker
   end
 end
 
+class Computer < Player
+end
+
+###################################
 class TTTGame  
   MARKER1 = 'O'
   MARKER2 = 'X'
@@ -166,7 +181,18 @@ class TTTGame
   end
 
   def computer_moves
-    key = board.unmarked_keys.sample
+    threatened_squares = board.squares_with_one_spot_left(human.marker)
+    winning_squares = board.squares_with_one_spot_left(computer.marker)
+
+    key = if !winning_squares.empty?
+            winning_squares.sample
+          elsif !threatened_squares.empty?
+            threatened_squares.sample
+          elsif board.unmarked_keys.include?(5)
+            5
+          else 
+            board.unmarked_keys.sample
+          end
     board[key] = computer.marker
   end
 
@@ -215,7 +241,7 @@ class TTTGame
     puts ""
   end
 
-  def update_scoreboard # bug here: computer score not updating
+  def update_scoreboard
     case board.winning_marker
     when human.marker then self.scoreboard[human.name] += 1
     when computer.marker then self.scoreboard[computer.name] += 1
@@ -223,7 +249,7 @@ class TTTGame
   end
 
   def reset_scoreboard
-    self.scoreboard = { @human.name => 0, @computer.name => 0 }
+    self.scoreboard = { human.name => 0, computer.name => 0 }
   end
 
   def display_grand_winner
@@ -263,15 +289,17 @@ class TTTGame
 
   def reset_round
     board.reset
-    reset_scoreboard
-    self.current_player = human
+    #self.current_player = human
+    switch_player
     sleep 1.5
     clear_screen
   end
 
   def reset
+    computer.name = computer_name
     board.reset
     set_nrounds
+    reset_scoreboard
     self.current_player = human
     clear_screen
   end
@@ -305,7 +333,7 @@ class TTTGame
           clear_screen_then_display_board(this_round) if human_turn?
         end
 
-        display_result
+        display_result(this_round)
 
         this_round += 1
         break if this_round > nrounds
@@ -316,8 +344,8 @@ class TTTGame
       display_grand_winner
       break unless play_again?
 
-      reset # need to test if reseting scoreboard works if play again
       display_play_again_message
+      reset
     end
 
     display_goodbye_message

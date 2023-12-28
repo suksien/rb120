@@ -112,20 +112,21 @@ module Displayable
   end
 
   def display_board(board, human, computer, scoreboard, this_round = nil)
-    puts "Round #{this_round}:" if this_round
-    puts "#{human.name} is #{human.marker}, #{computer.name} is #{computer.marker}"
-    puts ''
+    puts "=== Round #{this_round} ===" if this_round
     display_scoreboard(scoreboard, human, computer)
+    puts
+    puts "#{human.name} is #{human.marker}, #{computer.name} is #{computer.marker}"
     board.draw
     puts ''
   end
 
-  def clear_screen_then_display_board(board, human, computer, scoreboard, this_round = nil)
+  def clear_screen_then_display_board(board, human, computer, scoreboard,
+                                      this_round = nil)
     clear_screen
     display_board(board, human, computer, scoreboard, this_round)
   end
 
-  def display_result(board, human, computer)
+  def announce_winner(board, human, computer)
     case board.winning_marker
     when human.marker then puts "#{human.name} won this round!"
     when computer.marker then puts "#{computer.name} won this round!"
@@ -253,7 +254,8 @@ class Human < Player
   include Promptable
 
   def initialize
-    super(prompt_for_name, prompt_for_marker(TTTGame::MARKER1, TTTGame::MARKER2))
+    super(prompt_for_name, prompt_for_marker(TTTGame::MARKER1,
+                                             TTTGame::MARKER2))
   end
 
   def moves(board)
@@ -296,35 +298,40 @@ class Computer < Player
     BEHAVIORS[name] == :smart
   end
 
-  # def pick_winning_squares(board, opponent_marker)
-  #   winning_squares = board.squares_with_one_spot_left(marker)
-  #   winning_squares.sample unless winning_squares.empty?
-  # end
+  def random_square(board)
+    board.unmarked_keys.sample
+  end
 
-  # def pick_threatened_squares(board, opponent_marker)
-  #   threatened_squares = board.squares_with_one_spot_left(opponent_marker)
-  #   threatened_squares.sample unless threatened_squares.empty?
-  # end
+  def square_five(board)
+    return unless board.unmarked_keys.include?(5)
+    5
+  end
 
-  def ai_moves(board, opponent_marker)
-    threatened_squares = board.squares_with_one_spot_left(opponent_marker)
-    winning_squares = board.squares_with_one_spot_left(marker)
+  def winning_square(board)
+    available_squares = board.squares_with_one_spot_left(marker)
+    unless available_squares.empty?
+      key = available_squares.sample
+    end
+    key
+  end
 
-    key = if !winning_squares.empty?
-            winning_squares.sample
-          elsif !threatened_squares.empty?
-            threatened_squares.sample
-          elsif board.unmarked_keys.include?(5)
-            5
-          else
-            board.unmarked_keys.sample
-          end
-    board[key] = marker
+  def threatened_square(board, opponent_marker)
+    available_squares = board.squares_with_one_spot_left(opponent_marker)
+    unless available_squares.empty?
+      key = available_squares.sample
+    end
+    key
   end
 
   def regular_moves(board)
-    key = board.unmarked_keys.sample
-    board[key] = marker
+    board[random_square(board)] = marker
+  end
+
+  def ai_moves(board, opponent_marker)
+    available_squares = [winning_square(board),
+                         threatened_square(board, opponent_marker), square_five(board), random_square(board)]
+    best_square = available_squares.find { |sq| !!sq }
+    board[best_square] = marker
   end
 end
 
@@ -355,7 +362,8 @@ class TTTGame
     @nrounds = set_number_of_rounds(MIN_ROUND, MAX_ROUND)
     @first_player = @human
     @current_player = @first_player
-    @scoreboard = { @human.name => @human.score, @computer.name => @computer.score }
+    @scoreboard = { @human.name => @human.score,
+                    @computer.name => @computer.score }
   end
 
   def to_s
@@ -407,25 +415,43 @@ class TTTGame
     human_turn? ? human.moves(board) : computer.moves(board, human.marker)
   end
 
-  def play_one_game
+  def game_over?
+    board.someone_won? || board.full?
+  end
+
+  def play_one_round(round_number)
+    loop do
+      current_player_moves
+      break if game_over?
+
+      switch_player
+      if human_turn?
+        clear_screen_then_display_board(board, human, computer, scoreboard,
+                                        round_number)
+      end
+    end
+  end
+
+  def display_round_results(round_number)
+    clear_screen_then_display_board(board, human, computer, scoreboard,
+                                    round_number)
+    announce_winner(board, human, computer)
+    update_scoreboard if board.someone_won?
+  end
+
+  def prepare_to_start
     clear_screen
     display_welcome_message(human, computer)
+  end
+
+  def play_one_game
+    prepare_to_start
     this_round = 1
 
     loop do
       display_board(board, human, computer, scoreboard, this_round)
-
-      loop do
-        current_player_moves
-        break if board.someone_won? || board.full?
-
-        switch_player
-        clear_screen_then_display_board(board, human, computer, scoreboard, this_round) if human_turn?
-      end
-
-      clear_screen_then_display_board(board, human, computer, scoreboard, this_round)
-      display_result(board, human, computer)
-      update_scoreboard if board.someone_won?
+      play_one_round(this_round)
+      display_round_results(this_round)
 
       this_round += 1
       break if this_round > nrounds

@@ -1,5 +1,5 @@
 module Promptable
-  def set_number_of_rounds(min_rounds, max_rounds)
+  def prompt_for_number_of_rounds(min_rounds, max_rounds)
     total_rounds = ''
     loop do
       puts "How many rounds would you like to play? (enter a number between #{min_rounds} and #{max_rounds})"
@@ -359,7 +359,7 @@ class TTTGame
   end
 
   def set_up_game
-    @nrounds = set_number_of_rounds(MIN_ROUND, MAX_ROUND)
+    @nrounds = prompt_for_number_of_rounds(MIN_ROUND, MAX_ROUND)
     @first_player = @human
     @current_player = @first_player
     @scoreboard = { @human.name => @human.score,
@@ -391,7 +391,7 @@ class TTTGame
   def reset_game
     computer.set_name
     board.reset
-    self.nrounds = set_number_of_rounds(MIN_ROUND, MAX_ROUND)
+    self.nrounds = prompt_for_number_of_rounds(MIN_ROUND, MAX_ROUND)
     reset_scoreboard
     self.first_player = human
     self.current_player = human

@@ -12,3 +12,10 @@ class Cat
 end
 
 kitty = Cat.new
+
+# key point: the `#initialize` method
+
+=begin
+The `initialize` method is known as a constructor, which creates a new object for the class.
+It is automatically invoked when we call the `::new` method on the class. 
+=end

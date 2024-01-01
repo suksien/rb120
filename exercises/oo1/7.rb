@@ -19,3 +19,7 @@ end
 kitty = Cat.new('Sophie')
 kitty.greet
 p kitty.name
+
+# key point: getter method creation
+
+# On line 15, invoking the `#name` getter method inside the string interpolation.

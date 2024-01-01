@@ -16,3 +16,5 @@ class Cat
 end
 
 kitty = Cat.new('Sophie')
+
+# key point: initializing an instance variable

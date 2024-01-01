@@ -16,3 +16,5 @@ Array
 puts "Hello".class
 puts 5.class
 puts [1, 2, 3].class
+
+# key point: usage of the `#class` method

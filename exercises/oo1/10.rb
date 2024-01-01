@@ -28,3 +28,12 @@ end
 kitty = Cat.new('Sophie')
 kitty.greet
 kitty.walk
+
+# key point: module creation, usage, and mixing in
+
+=begin
+A module can be defined by using the `module` keyword and it can mixed in to any class
+by invoking `include` and passing in the module name. After a module is mixed in, the methods
+in the module can be invoked on instances of the class just like instance methods. 
+
+=end

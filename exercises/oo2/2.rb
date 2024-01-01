@@ -19,3 +19,5 @@ kitty = Cat.new('Sophie')
 p kitty.name
 kitty.rename('Chloe')
 p kitty.name
+
+# key point: invoking setter methods within a class

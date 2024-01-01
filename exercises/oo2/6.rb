@@ -21,3 +21,13 @@ end
 
 kitty = Cat.new('Sophie')
 kitty.greet
+
+=begin
+Constant variables are defined by uppercasing the first letter of the variable name, 
+although by convention the entire name is uppercased.
+
+Constant variables have lexical scope, which means they avaiable anywhere within the 
+enclosing class.
+=end
+
+# key point: constants

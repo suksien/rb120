@@ -22,3 +22,11 @@ kitty1 = Cat.new
 kitty2 = Cat.new
 
 Cat.total
+
+=begin
+Class variables are defined by prepending `@@` to the variable name and they are scoped
+at the class level. They can be accessed and modified within instance methods. 
+
+=end
+
+# key point: class variables

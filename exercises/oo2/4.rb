@@ -27,3 +27,5 @@ kitty = Cat.new('Sophie')
 
 Cat.generic_greeting
 kitty.personal_greeting
+
+# key point: usage of class vs instance method

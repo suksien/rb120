@@ -20,3 +20,11 @@ class BeesWax
     puts "I am a #{type} of Bees Wax"
   end
 end
+
+=begin
+The `type` method on line 6 is a getter method while `type=(t)` on line 10 is a getter method. 
+Since we want both, they can be created at the same time by calling `attr_accessor`.
+
+=end
+
+# key point: getter and setter methods

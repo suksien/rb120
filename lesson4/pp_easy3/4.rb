@@ -12,5 +12,7 @@ class Cat
 	end
 end
 
-# We need to override the default `to_s` method by defining a custom `to_s` method in 
+# We need to override the default `Object#to_s` method by defining a custom `to_s` method in 
 # the class definition. 
+
+# key point: overriding `to_s`

@@ -10,5 +10,6 @@ end
 
 oracle = Oracle.new # instantiating a new Oracle object
 
-# calling the `predict_the_future` method on the object, returning a string
+# calling the `predict_the_future` method on the newly created object referenced by `oracle`
+# the method call will return a string of the form `"You will <something>"`
 p oracle.predict_the_future 

@@ -1,0 +1,1 @@
+# `self` here refers to the `Cat` class. Therefore, `self.cats_count` is a class method.

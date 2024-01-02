@@ -6,6 +6,9 @@
 
 
 # Answer:
-# The default the `Object#to_s` prints the object’s class and an encoding of the object id
+# The default `Object#to_s` returns the object’s class and an encoding of the object id
 # e.g. "#<Pizza:0x0000000100a79378>"
 # https://ruby-doc.org/3.2.0/Object.html#method-i-to_s
+
+
+# key point: default `to_s` method

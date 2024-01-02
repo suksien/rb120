@@ -1,8 +1,4 @@
 class Greeting
-  # def self.greet
-  #   greet("Hello")
-  # end
-
   def greet(message)
     puts message
   end
@@ -11,7 +7,7 @@ end
 class Hello < Greeting
   def self.hi
     puts "Hello"
-    #greet("Hello")
+    # greet("Hello")
   end
 
   def hi
@@ -26,5 +22,9 @@ class Goodbye < Greeting
 end
 
 Hello.hi
+Hello.new.hi 
+
 # cannot simply call `greet` on in `self.hi`, because the `Greeting` class
 # defines `greet` on its instances
+
+# key point: class methods

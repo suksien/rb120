@@ -23,3 +23,5 @@ car.go_fast
 
 truck = Truck.new
 truck.go_fast
+
+# key point: mixing in modules and invoking module methods

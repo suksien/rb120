@@ -23,3 +23,5 @@ Television.manufacturer
 # this will throw a `NoMethodError` because we are calling the `model` instance method
 # on the class
 Television.model
+
+# key point: instance vs class methods

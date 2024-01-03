@@ -15,3 +15,12 @@ end
 # is right as well because that line also works by referencing the instance variable 
 # directly. However, using getter methods to reference instance variables are generally 
 # preferred over referencing the instance variables directly.
+
+=begin
+Ben is right. This is because he explicitly included an `attr_reader` for the `@balance`
+instance variable, which will return the value of `@balance`. His intention on line 9 is 
+to call the getter method `balance`, instead of directly referencing `@balance`.
+
+=end
+
+# key point: calling getter/setter or referencing instance variable

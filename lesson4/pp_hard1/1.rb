@@ -54,3 +54,5 @@ p auto.range
 
 motorbike = Motorcycle.new
 p motorbike.range
+
+# key point: using modules for common behaviors for unrelated classes

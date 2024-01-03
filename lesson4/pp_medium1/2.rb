@@ -20,3 +20,5 @@ end
 
 # The second is to change `attr_reader` to `attr_accessor` and invoke the getter method with 
 # `self.quantity` in the problematic line. 
+
+# key point: instance variable vs local variable

@@ -19,3 +19,17 @@ puts truck1.year
 
 car1 = Car.new(2006)
 puts car1.year
+
+=begin
+On line 11, we create a `Truck` class that inherits from the `Vehicle` class, which means
+that all methods and instance variables defined in `Vehicle`, specifically the `year` getter
+and`initialize` methods and `@year` instance variable are also available to `Truck` objects. 
+
+This is why we can invoke the `year` getter method on a `Truck` object referenced by `truck1`. 
+
+Class inheritance can be used to produce DRYer codes whereby a superclass implements the
+common behaviors of the subclasses.
+
+=end
+
+# key point: class inheritance

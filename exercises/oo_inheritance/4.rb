@@ -20,3 +20,6 @@ end
 
 truck1 = Truck.new
 puts truck1.start_engine('fast')
+
+# On line 17, invoking `super` with empty parentheses since the superclass `Vehicle#start_engine`
+# method does not accept any arguments.

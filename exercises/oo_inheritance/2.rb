@@ -21,3 +21,7 @@ end
 
 truck1 = Truck.new(1994)
 puts truck1.year
+
+# invoking `super` on line 14 is invoking the superclass `Vehicle#initialize` method
+
+# key point: method overriding and `super`

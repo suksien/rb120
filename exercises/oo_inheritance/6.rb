@@ -31,3 +31,5 @@ puts truck1.tow
 
 car1 = Car.new(2006)
 puts car1.year
+
+# key points: class inheritance and interface inheritance

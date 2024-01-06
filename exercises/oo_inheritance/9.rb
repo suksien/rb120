@@ -29,4 +29,10 @@ end
 bird1 = Bird.new('Red')
 bird1.color
 
-# Bird, Flyable, Animal
+# Bird, Flyable, Animal, Object, Kernel, BasicObject
+
+=begin
+Ruby first searches the class of the calling object, followed by any modules that are mixed
+in to the class, and finally it searches the superclass. When traversing through modules, Ruby
+  searches the last `included` module first. 
+=end

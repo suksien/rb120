@@ -23,3 +23,13 @@ cat1 = Cat.new('Black')
 cat1.color
 
 # Cat, Animal
+
+=begin
+The method lookup path is the order of classes that Ruby follows when searchin for a particular
+method that is invoked. It starts from the class of the calling object and goes up the 
+inheritance chain until it either finds the method, in which it will stop searching, or reaches
+the end of the lookup path, in which case it will throw an error if the method is not found.  
+
+The `::ancestors` method returns an array of ordered class names in the method lookup path.
+=end
+

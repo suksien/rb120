@@ -27,3 +27,10 @@ end
 truck1 = Truck.new(1994, 'Short')
 puts truck1.year
 puts truck1.bed_type
+
+=begin
+On line 19, invoking the superclass `Vehicle#initialize` method and passing only the `year`
+argument. 
+=end
+
+# key point: super with arguments
